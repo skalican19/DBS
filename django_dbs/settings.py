@@ -25,7 +25,7 @@ SECRET_KEY = 'qrj!m&w#1$jpv=_^9r__1(!wkahoulq%aj(x55mk)-!#ej54*o'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -78,8 +78,8 @@ WSGI_APPLICATION = 'django_dbs.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'xskalican@fiit-dbs-xskalican-db',         'USER': 'xskalican',
-        'PASSWORD': '',         'HOST': 'https://fiit-dbs-xskalican-app.azurewebsites.net',
+        'NAME': 'postgres',         'USER': 'xskalican@fiit-dbs-xskalican-db',
+        'PASSWORD': 'Michal3567AbDg',         'HOST': 'fiit-dbs-xskalican-db.postgres.database.azure.com',
         'PORT': '5432',
     }
 }
