@@ -19,4 +19,5 @@ from dbs_zadanie import views
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('v1/health/', views.uptime, name='uptime'),
 ]
