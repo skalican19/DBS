@@ -1,4 +1,5 @@
 from django.db import connection
+from django.http import JsonResponse
 from django.http import HttpResponse
 
 from django.views import View
@@ -11,5 +12,7 @@ def index(request):
 def uptime(request):
     cursor = connection.cursor()
     cursor.execute("SELECT date_trunc('second', current_timestamp -pg_postmaster_start_time()) as uptime")
-    string = cursor.fetchone()
-    return HttpResponse(string)
+    uptime_db = cursor.fetchone()
+    uptime_json = {'uptime': str(uptime_db[0])}
+    output = {'pgsql': uptime_json}
+    return JsonResponse(output, safe=False)
