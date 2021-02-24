@@ -13,6 +13,5 @@ def uptime(request):
     cursor = connection.cursor()
     cursor.execute("SELECT date_trunc('second', current_timestamp -pg_postmaster_start_time()) as uptime")
     uptime_db = cursor.fetchone()
-    uptime_json = {'uptime': str(uptime_db[0])}
-    output = {'pgsql': uptime_json}
+    output = {'pgsql': {'uptime': str(uptime_db[0]).replace(',', '')}}
     return JsonResponse(output, safe=False)
