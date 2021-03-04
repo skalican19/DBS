@@ -17,7 +17,9 @@ from django.urls import path
 
 from dbs_zadanie import views
 
+
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('v1/health/', views.uptime, name='uptime'),
+    path('', views.index),
+    path('v1/health/', views.uptime),
+    path('v1/ov/submissions/', views.show_pages)
 ]

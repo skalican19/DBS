@@ -78,8 +78,8 @@ WSGI_APPLICATION = 'django_dbs.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'postgres',         'USER': 'xskalican@fiit-dbs-xskalican-db',
-        'PASSWORD': 'Michal3567AbDg',         'HOST': 'fiit-dbs-xskalican-db.postgres.database.azure.com',
+        'NAME': 'postgres',         'USER': 'postgres',
+        'PASSWORD': 'Michal3567AbDg',         'HOST': 'localhost',
         'PORT': '5432',
     }
 }
