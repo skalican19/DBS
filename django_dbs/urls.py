@@ -21,5 +21,6 @@ from dbs_zadanie import views
 urlpatterns = [
     path('', views.index),
     path('v1/health/', views.uptime),
-    path('v1/ov/submissions/', views.show_pages)
+    path('v1/ov/submissions/', views.submissions),
+    path('v1/ov/submissions/<int:sub_id>', views.delete)
 ]
