@@ -9,7 +9,7 @@ def get_request(request):
 
     where_date = ''
     if information['registration_date_gte'] != '0001-01-01' or information['registration_date_lte'] != '9999-12-12':
-        where_date = ' AND registration_date BETWEEN %(registration_date_gte)s AND %(registration_date_lte)s'
+        where_date = ' AND registration_date BETWEEN %(registration_date_gte)s::date AND %(registration_date_lte)s::date'
 
     posts_json = []
     cursor.execute('''SELECT id,
