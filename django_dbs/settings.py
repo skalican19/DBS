@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'django_dbs.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dbs2021',         'USER': 'postgres',
+        'NAME': 'postgres',         'USER': 'postgres',
         'PASSWORD': 'Michal3567AbDg',         'HOST': 'dbs2021.cm7bdvavkszw.us-east-1.rds.amazonaws.com',
         'PORT': '5432',
     }
