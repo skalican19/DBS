@@ -7,9 +7,15 @@ def get_request_migrations(request):
     information = parse_url(request)
     cursor = connection.cursor()
 
+    where = ''
+    if information['query'] != '':
+        where = ' WHERE (name ~* %(query)s OR address_line ~* %(query)s)'
     where_date = ''
     if information['last_update_gte'] != '0001-01-01' or information['last_update_lte'] != '9999-12-12':
-        where_date = ' AND last_update BETWEEN %(last_update_gte)s::date AND %(last_update_lte)s::date'
+        if where == '':
+            where_date = ' WHERE last_update BETWEEN %(last_update_gte)s::date AND %(last_update_lte)s::date'
+        else:
+            where_date = ' AND last_update BETWEEN %(last_update_gte)s::date AND %(last_update_lte)s::date'
 
     posts_json = []
     cursor.execute('''with likvidator_count AS (
@@ -68,20 +74,18 @@ def get_request_migrations(request):
                         FULL JOIN znizenie_count on znizenie_count.cin = companies.cin
                         FULL JOIN likvidator_count on likvidator_count.cin = companies.cin
                         FULL JOIN konkurz_vyrovanania_count on konkurz_vyrovanania_count.cin = companies.cin
-                        FULL JOIN konkurz_actors_count on konkurz_actors_count.cin = companies.cin  
-                        WHERE (name ~* %(query)s OR address_line ~* %(query)s) '''
-                   + where_date +
+                        FULL JOIN konkurz_actors_count on konkurz_actors_count.cin = companies.cin'''
+                    + where + where_date +
                    ''' ORDER BY %(order_by)s ''' + information['order_type'] +
                    ''' LIMIT %(per_page)s OFFSET %(offset)s''', information)
 
+    print(cursor.query)
     posts = cursor.fetchall()
-    total = 0
 
     cursor.execute('''SELECT count(*) 
-                      FROM ov.companies 
-                      WHERE (name ~* %(query)s OR address_line ~* %(query)s)'''
-                   + where_date, information)
-
+                      FROM ov.companies'''
+                   + where + where_date, information)
+    print(cursor.query)
     total, = cursor.fetchone()
 
     if posts:
@@ -103,9 +107,9 @@ def get_request_migrations(request):
 def parse_url(request):
     information = {'page': request.GET.get('page', '1'),
                    'per_page': request.GET.get('per_page', '10'),
-                   'last_update_gte': request.GET.get('registration_date_gte', '0001-01-01'),
-                   'last_update_lte': request.GET.get('registration_date_lte', '9999-12-12'),
-                   'order_by': request.GET.get('order_by', 'id'),
+                   'last_update_gte': request.GET.get('last_update_gte', '0001-01-01'),
+                   'last_update_lte': request.GET.get('last_update_lte', '9999-12-12'),
+                   'order_by': request.GET.get('order_by', 'cin'),
                    'order_type': request.GET.get('order_type', 'desc'),
                    'query': request.GET.get('query', '')}
 
@@ -140,7 +144,7 @@ def validate_params(information):
             information['last_update_gte'] = '0001-01-01'
 
     if information['last_update_lte'] != '9999-12-12':
-        if not validate_date(information['registration_date_lte']):
+        if not validate_date(information['last_update_lte']):
             information['registration_date_lte'] = '9999-12-12'
 
     if information['page'].isnumeric():
