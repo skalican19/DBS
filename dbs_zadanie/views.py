@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from dbs_zadanie.delete_request import delete_request
+from dbs_zadanie.get_migrations import get_request_migrations
 from dbs_zadanie.get_request import *
 from dbs_zadanie.post_request import *
 
@@ -30,6 +31,12 @@ def submissions(request):
             return JsonResponse({"response": post}, status=201)
         else:
             return JsonResponse(post, status=422)
+
+
+@csrf_exempt
+def companies(request):
+    post = get_request_migrations(request)
+    return JsonResponse(post)
 
 
 @csrf_exempt

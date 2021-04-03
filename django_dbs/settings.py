@@ -75,11 +75,13 @@ WSGI_APPLICATION = 'django_dbs.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'slovensko',         'USER': 'tester',
-        'PASSWORD': 'YRgYxeD4UVGp',         'HOST': '147.175.150.216',
+        'NAME': 'dbs2021',         'USER': 'postgres',
+        'PASSWORD': 'Michal3567AbDg',         'HOST': 'dbs2021.cm7bdvavkszw.us-east-1.rds.amazonaws.com',
         'PORT': '5432',
     }
 }
