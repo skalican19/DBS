@@ -70,11 +70,11 @@ def get_request_migrations(request):
                             konkurz_vyrovanania_count.konkurz_vyrovnanie_issues_count,
                             konkurz_actors_count.konkurz_restrukturalizacia_actors_count
                         FROM ov.companies
-                        FULL JOIN or_podanie_count on or_podanie_count.cin = companies.cin
-                        FULL JOIN znizenie_count on znizenie_count.cin = companies.cin
-                        FULL JOIN likvidator_count on likvidator_count.cin = companies.cin
-                        FULL JOIN konkurz_vyrovanania_count on konkurz_vyrovanania_count.cin = companies.cin
-                        FULL JOIN konkurz_actors_count on konkurz_actors_count.cin = companies.cin'''
+                        LEFT JOIN or_podanie_count on or_podanie_count.cin = companies.cin
+                        LEFT JOIN znizenie_count on znizenie_count.cin = companies.cin
+                        LEFT JOIN likvidator_count on likvidator_count.cin = companies.cin
+                        LEFT JOIN konkurz_vyrovanania_count on konkurz_vyrovanania_count.cin = companies.cin
+                        LEFT JOIN konkurz_actors_count on konkurz_actors_count.cin = companies.cin'''
                     + where + where_date +
                    ''' ORDER BY %(order_by)s ''' + information['order_type'] +
                    ''' LIMIT %(per_page)s OFFSET %(offset)s''', information)
@@ -145,7 +145,7 @@ def validate_params(information):
 
     if information['last_update_lte'] != '9999-12-12':
         if not validate_date(information['last_update_lte']):
-            information['registration_date_lte'] = '9999-12-12'
+            information['last_update_lte'] = '9999-12-12'
 
     if information['page'].isnumeric():
         information['page'] = int(information['page'])
