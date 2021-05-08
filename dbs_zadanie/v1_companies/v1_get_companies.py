@@ -1,6 +1,6 @@
 from django.db import connection
 from datetime import datetime
-import math
+from dbs_zadanie.shared_functions.shared_functions import format_output_get
 
 
 def get_request_migrations(request):
@@ -79,13 +79,12 @@ def get_request_migrations(request):
                    ''' ORDER BY %(order_by)s ''' + information['order_type'] +
                    ''' LIMIT %(per_page)s OFFSET %(offset)s''', information)
 
-    print(cursor.query)
     posts = cursor.fetchall()
 
     cursor.execute('''SELECT count(*) 
                       FROM ov.companies'''
                    + where + where_date, information)
-    print(cursor.query)
+
     total, = cursor.fetchone()
 
     if posts:
@@ -95,13 +94,7 @@ def get_request_migrations(request):
                          "likvidator_issues_count": post[7], "konkurz_vyrovnanie_issues_count": post[8], "konkurz_restrukturalizacia_actors_count": post[9]}
             posts_json.append(post_json)
 
-    per_page = information['per_page']
-    pages = math.ceil(total / per_page)
-
-    metadata = {"page": information['page'] + 1, "per_page": information['per_page'], "pages": pages, "total": total}
-    output = {"items": posts_json, "metadata": metadata}
-
-    return output
+    return format_output_get(information, total, posts_json)
 
 
 def parse_url(request):

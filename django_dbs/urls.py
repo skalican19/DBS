@@ -23,5 +23,7 @@ urlpatterns = [
     path('v1/health/', views.uptime),
     path('v1/ov/submissions/', views.submissions),
     path('v1/ov/submissions/<int:sub_id>', views.delete),
-    path('v1/companies/', views.companies)
+    path('v1/companies/', views.companies),
+    path('v2/ov/submissions/', views.v2_submissions),
+    path('v2/ov/submissions/<int:sub_id>', views.v2_submissions_url_with_id)
 ]

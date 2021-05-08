@@ -3,53 +3,21 @@ from datetime import datetime
 
 from django.db import connection
 
+from dbs_zadanie.shared_functions.shared_functions import validate_params_post, create_response_get
+
 
 def post_request(request):
     post = json.loads(request.body.decode('utf-8'))
 
-    validated, errors = validate_params(post)
+    validated, errors = validate_params_post(post)
 
     if validated:
         insert(post)
-        response = create_response(post)
+        response = create_response_get(post)
         return validated, response
     else:
         error_message = {"errors": errors}
         return validated, error_message
-
-
-def validate_params(post):
-    validation = True
-    keys = ['br_court_name', 'kind_name', 'cin', 'registration_date', 'corporate_body_name',
-            'br_section', 'br_insertion', 'text', 'street', 'postal_code', 'city']
-    error = []
-
-    for key in keys:
-        if key not in post.keys():
-            error.append({"field": key, "reasons": ['required']})
-            validation = False
-            continue
-
-        if key == 'cin':
-            if not isinstance(post['cin'], int):
-                error.append({"field": key, "reasons": ['required', 'not_number']})
-                validation = False
-
-        elif key == 'registration_date':
-            if validate_date(post['registration_date']):
-                date = datetime.fromisoformat(post['registration_date'])
-                if date.year != datetime.today().year:
-                    error.append({"field": key, "reasons": ['required', 'invalid_range']})
-                    validation = False
-            else:
-                error.append({"field": key, "reasons": ['required', 'invalid_range']})
-                validation = False
-
-        elif not isinstance(post[key], str) or post[key] == '':
-            error.append({"field": key, "reasons": ['required']})
-            validation = False
-
-    return validation, error
 
 
 def insert(post):
@@ -93,11 +61,4 @@ def validate_date(date_time):
     return True
 
 
-def create_response(post):
-    response = {"id": post['id'], "br_court_name": post['br_court_name'], "kind_name": post["kind_name"],
-                "cin": post["cin"], "registration_date": post["registration_date"],
-                "corporate_body_name": post["corporate_body_name"], "br_section": post["br_section"],
-                "br_insertion": post["br_insertion"], "text": post["text"], "street": post["street"],
-                "postal_code": post["postal_code"], "city": post["city"]}
-    return response
 
