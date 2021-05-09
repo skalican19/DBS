@@ -24,7 +24,7 @@ def insert(post):
     today = timezone.now()
     year = today.year
 
-    address_line = post['postal_code'] + ", " + post['postal_code'] + " " + post['city']
+    address_line = post['street'] + ", " + post['postal_code'] + " " + post['city']
 
     max_number = BulletinIssues.objects.aggregate(Max('number'))
     bulletin_entry = BulletinIssues(year=year, number=max_number['number__max'] + 1, published_at=today, created_at=today,

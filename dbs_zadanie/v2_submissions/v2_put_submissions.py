@@ -16,7 +16,7 @@ def put_from_id(request, sub_id):
 
     if validation:
         OrPodanieIssues.objects.filter(id=sub_id).update(**params_for_edit)
-        return True, {'response': post_to_edit.as_dict()}
+        return True, {'response': OrPodanieIssues.objects.get(id=sub_id).as_dict()}
     else:
         return False, {'errors': error}
 
