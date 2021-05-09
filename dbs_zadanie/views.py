@@ -7,6 +7,7 @@ from dbs_zadanie.v1_companies.v1_get_companies import get_request_migrations
 from dbs_zadanie.v1_submissions import v1_delete_submissions
 from dbs_zadanie.v1_submissions import v1_get_submissions
 from dbs_zadanie.v1_submissions import v1_post_submissions
+from dbs_zadanie.v2_companies import v2_get_companies
 from dbs_zadanie.v2_submissions import v2_get_submissions, v2_delete_submissions, v2_post_submissions, \
     v2_put_submissions
 
@@ -82,4 +83,10 @@ def v2_submissions_url_with_id(request, sub_id):
             return JsonResponse(post, status=201)
         else:
             return JsonResponse(post, status=422)
+
+@csrf_exempt
+def v2_companies(request):
+    if request.method == 'GET':
+        post = v2_get_companies.get_request(request)
+        return JsonResponse(post)
 

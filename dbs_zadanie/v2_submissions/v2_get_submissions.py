@@ -1,7 +1,7 @@
-from django.db.models import Q
+from django.db.models import Q, F
 
 from dbs_zadanie.models import OrPodanieIssues
-from dbs_zadanie.shared_functions.shared_functions import parse_url_get, format_output_get
+from dbs_zadanie.shared_functions.shared_functions import parse_url_submissions, format_output_get
 
 
 def get_from_id(sub_id):
@@ -12,19 +12,18 @@ def get_from_id(sub_id):
 
 
 def get_request(request):
-    information = parse_url_get(request)
+    information = parse_url_submissions(request)
 
     convert_order_by = ['id', 'br_court_name', 'kind_name', 'cin', 'registration_date', 'corporate_body_name',
                         'br_section', 'br_insertion', 'text', 'street', 'postal_code', 'city']
-    convert_order_type = {'asc': '', 'desc': '-'}
 
-    order_by = convert_order_type[information['order_type']] + convert_order_by[information['order_by'] - 1]
+    order_by = convert_order_by[information['order_by'] - 1]
     filter_with = create_filter(information)
 
-    if filter_with is not None:
-        query = OrPodanieIssues.objects.filter(filter_with).order_by(order_by)
+    if information['order_type'] == 'desc':
+        query = OrPodanieIssues.objects.filter(filter_with).order_by(F(order_by).desc(nulls_last=True))
     else:
-        query = OrPodanieIssues.objects.all().order_by(order_by)
+        query = OrPodanieIssues.objects.filter(filter_with).order_by(F(order_by).asc(nulls_last=True))
 
     total = query.count()
     query = query[information['page']:information['page'] + information['per_page']]

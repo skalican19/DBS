@@ -23,6 +23,17 @@ class Companies(models.Model):
     created_at = models.DateTimeField(blank=True, null=True)
     updated_at = models.DateTimeField(blank=True, null=True)
 
+    def as_dict(self):
+        return {
+            "cin": self.cin,
+            "name": self.name,
+            "br_section": self.br_section,
+            "address_line": self.address_line,
+            "last_update": self.last_update,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at,
+        }
+
     class Meta:
         managed = False
         db_table = 'companies'

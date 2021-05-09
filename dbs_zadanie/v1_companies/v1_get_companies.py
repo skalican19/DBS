@@ -1,10 +1,10 @@
 from django.db import connection
 from datetime import datetime
-from dbs_zadanie.shared_functions.shared_functions import format_output_get
+from dbs_zadanie.shared_functions.shared_functions import format_output_get, parse_url_companies
 
 
 def get_request_migrations(request):
-    information = parse_url(request)
+    information = parse_url_companies(request)
     cursor = connection.cursor()
 
     where = ''
@@ -97,66 +97,5 @@ def get_request_migrations(request):
     return format_output_get(information, total, posts_json)
 
 
-def parse_url(request):
-    information = {'page': request.GET.get('page', '1'),
-                   'per_page': request.GET.get('per_page', '10'),
-                   'last_update_gte': request.GET.get('last_update_gte', '0001-01-01'),
-                   'last_update_lte': request.GET.get('last_update_lte', '9999-12-12'),
-                   'order_by': request.GET.get('order_by', 'cin'),
-                   'order_type': request.GET.get('order_type', 'desc'),
-                   'query': request.GET.get('query', '')}
-
-    validate_params(information)
-
-    return information
 
 
-def validate_params(information):
-    order_by = {'cin': 1,
-                'name': 2,
-                'br_section': 3,
-                'address_line': 4,
-                'last_update': 5,
-                'or_podanie_issues_count': 6,
-                'znizenie_imania_issues_count': 7,
-                'likvidator_issues_count': 8,
-                'konkurz_vyrovnanie_issues_count': 9,
-                'konkurz_restrukturalizacia_actors_count': 10,
-                }
-
-    if information['order_by'] in order_by.keys():
-        information['order_by'] = order_by[information['order_by']]
-    else:
-        information['order_by'] = 1
-
-    if information['order_type'].lower() != 'asc' and information['order_type'].lower() != 'desc':
-        information['order_type'] = 'desc'
-
-    if information['last_update_gte'] != '0001-01-01':
-        if not validate_date(information['last_update_gte']):
-            information['last_update_gte'] = '0001-01-01'
-
-    if information['last_update_lte'] != '9999-12-12':
-        if not validate_date(information['last_update_lte']):
-            information['last_update_lte'] = '9999-12-12'
-
-    if information['page'].isnumeric():
-        information['page'] = int(information['page'])
-        if information['page'] > 0:
-            information['page'] = information['page'] - 1
-    else:
-        information['page'] = 0
-    if information['per_page'].isnumeric():
-        information['per_page'] = int(information['per_page'])
-    else:
-        information['per_page'] = 10
-
-    information['offset'] = information['per_page'] * information['page']
-
-
-def validate_date(date_time):
-    try:
-        datetime.fromisoformat(date_time)
-    except ValueError:
-        return False
-    return True

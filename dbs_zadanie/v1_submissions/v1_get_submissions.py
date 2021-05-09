@@ -1,9 +1,9 @@
 from django.db import connection
-from dbs_zadanie.shared_functions.shared_functions import parse_url_get, format_output_get
+from dbs_zadanie.shared_functions.shared_functions import parse_url_submissions, format_output_get
 
 
 def get_request(request):
-    information = parse_url_get(request)
+    information = parse_url_submissions(request)
     cursor = connection.cursor()
 
     where_date = ''

@@ -25,5 +25,6 @@ urlpatterns = [
     path('v1/ov/submissions/<int:sub_id>', views.delete),
     path('v1/companies/', views.companies),
     path('v2/ov/submissions/', views.v2_submissions),
-    path('v2/ov/submissions/<int:sub_id>', views.v2_submissions_url_with_id)
+    path('v2/ov/submissions/<int:sub_id>', views.v2_submissions_url_with_id),
+    path('v2/companies/', views.v2_companies)
 ]
