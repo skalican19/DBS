@@ -1,8 +1,8 @@
 from dbs_zadanie.models import OrPodanieIssues, BulletinIssues, RawIssues
 
 
-def delete_request(sub_id):
-    post_to_delete = OrPodanieIssues.objects.filter(id=sub_id).first()
+def delete_from_id(sub_id):
+    post_to_delete = OrPodanieIssues.objects.get(id=sub_id)
 
     if post_to_delete is None:
         return False, {"error": {"message": "Záznam neexistuje"}}
@@ -12,10 +12,10 @@ def delete_request(sub_id):
     raw_count = OrPodanieIssues.objects.filter(raw_issue=post_to_delete.raw_issue).count()
 
     if bulletin_count_1 == 1 and bulletin_count_2 == 1:
-        BulletinIssues.objects.filter(id=post_to_delete.bulletin_issue.id).delete()
+        BulletinIssues.objects.get(id=post_to_delete.bulletin_issue.id).delete()
 
     if raw_count == 1:
-        RawIssues.objects.filter(id=post_to_delete.raw_issue.id).delete()
+        RawIssues.objects.get(id=post_to_delete.raw_issue.id).delete()
 
     post_to_delete.delete()
 

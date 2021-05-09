@@ -7,7 +7,8 @@ from dbs_zadanie.v1_companies.v1_get_companies import get_request_migrations
 from dbs_zadanie.v1_submissions import v1_delete_submissions
 from dbs_zadanie.v1_submissions import v1_get_submissions
 from dbs_zadanie.v1_submissions import v1_post_submissions
-from dbs_zadanie.v2_submissions import v2_get_submissions, v2_delete_submissions, v2_post_submissions
+from dbs_zadanie.v2_submissions import v2_get_submissions, v2_delete_submissions, v2_post_submissions, \
+    v2_put_submissions
 
 
 def index(request):
@@ -67,7 +68,7 @@ def v2_submissions(request):
 @csrf_exempt
 def v2_submissions_url_with_id(request, sub_id):
     if request.method == 'DELETE':
-        success, error = v2_delete_submissions.delete_request(sub_id)
+        success, error = v2_delete_submissions.delete_from_id(sub_id)
         if success:
             return JsonResponse({}, status=204)
         else:
@@ -75,3 +76,10 @@ def v2_submissions_url_with_id(request, sub_id):
     if request.method == 'GET':
         post = v2_get_submissions.get_from_id(sub_id)
         return JsonResponse(post)
+    if request.method == 'PUT':
+        success, post = v2_put_submissions.put_from_id(request, sub_id)
+        if success:
+            return JsonResponse(post, status=201)
+        else:
+            return JsonResponse(post, status=422)
+

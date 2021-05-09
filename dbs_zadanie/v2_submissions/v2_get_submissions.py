@@ -5,7 +5,7 @@ from dbs_zadanie.shared_functions.shared_functions import parse_url_get, format_
 
 
 def get_from_id(sub_id):
-    post = OrPodanieIssues.objects.filter(id=sub_id).first()
+    post = OrPodanieIssues.objects.get(id=sub_id)
     if post is not None:
         return {'response': post.as_dict()}
     return {'response': ''}
@@ -26,7 +26,7 @@ def get_request(request):
     else:
         query = OrPodanieIssues.objects.all().order_by(order_by)
 
-    total = query.values().count()
+    total = query.count()
     query = query[information['page']:information['page'] + information['per_page']]
 
     posts_json = [post.as_dict() for post in query]
@@ -44,7 +44,7 @@ def create_filter(information):
                       Q(city__contains=information['query'])
     if information['registration_date_gte'] != '0001-01-01' or information['registration_date_lte'] != '9999-12-12':
         new_filter &= Q(registration_date__range=
-                        [information['registration_date_lte'], information['registration_date_gte']])
+                        [information['registration_date_gte'][:10], information['registration_date_lte'][:10]])
 
     return new_filter
 

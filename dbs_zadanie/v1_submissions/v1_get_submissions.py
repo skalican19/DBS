@@ -22,7 +22,7 @@ def get_request(request):
                         text,
                         street,
                         postal_code,
-                        city                             
+                        city,  count(*) OVER() AS full_count                           
                         FROM ov.or_podanie_issues   
                         WHERE (cin::text ~* %(query)s OR city ~* %(query)s OR corporate_body_name ~* %(query)s)'''
                    + where_date +
@@ -37,6 +37,6 @@ def get_request(request):
                          "br_section": post[6], "br_insertion": post[7], "text": post[8], "street": post[9],
                          "postal_code": post[10], "city": post[11]}
             posts_json.append(post_json)
-        total = 0
+        total = posts[0][12]
 
     return format_output_get(information, total, posts_json)
